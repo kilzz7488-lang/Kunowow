@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚡ STICKMAN BATTLE: EPIC EFFECTS ⚡</title>
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    /* ========== CSS LAMA (PERTAHANKAN SEMUA) ========== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: radial-gradient(circle at 30% 40%, #0b0e1a, #020308);
+      font-family: 'Poppins', sans-serif;
+      color: white;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      width: 100%; height: 100%;
+      background-image: 
+        radial-gradient(2px 2px at 5% 10%, cyan, transparent),
+        radial-gradient(4px 4px at 80% 30%, magenta, transparent),
+        radial-gradient(3px 3px at 15% 70%, gold, transparent),
+        radial-gradient(5px 5px at 95% 85%, lime, transparent);
+      background-size: 200px 200px;
+      opacity: 0.25;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .container {
+      position: relative;
+      z-index: 10;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .glitch {
+      font-family: 'Bangers', cursive;
+      font-size: 4.5rem;
+      text-align: center;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: white;
+      text-shadow: 0.05em 0 0 #ff00c1, -0.05em -0.025em 0 #00fff9;
+      animation: glitch 0.2s infinite alternate;
+    }
+    @keyframes glitch {
+      0% { transform: translate(0); }
+      20% { transform: translate(-3px, 1px); }
+      40% { transform: translate(3px, -1px); }
+      60% { transform: translate(-1px, 2px); }
+      80% { transform: translate(1px, -2px); }
+      100% { transform: translate(0); }
+    }
+    .sub {
+      text-align: center;
+      color: #b0c4de;
+      font-style: italic;
+      text-shadow: 0 0 10px cyan;
+      margin-bottom: 30px;
+    }
+    /* GRID KARAKTER */
+    .char-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      background: rgba(0, 10, 25, 0.6);
+      backdrop-filter: blur(8px);
+      padding: 35px 20px;
+      border-radius: 70px 70px 30px 30px;
+      border: 2px solid rgba(255, 0, 200, 0.5);
+      box-shadow: 0 0 50px #ff44ee, inset 0 0 20px #00aaff;
+      margin: 30px 0;
+    }
+    .card {
+      width: 160px;
+      background: linear-gradient(145deg, #1c2a3f, #0d1625);
+      border-radius: 30px;
+      padding: 18px 5px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.2s;
+      border: 2px solid transparent;
+      box-shadow: 0 12px 0 #0b121c, 0 0 25px #00b7ff;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::after {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.25) 0%, transparent 70%);
+      opacity: 0;
+      transition: 0.4s;
+    }
+    .card:hover::after { opacity: 1; transform: scale(1.1); }
+    .card.f1-selected { border: 4px solid #ff0055; box-shadow: 0 0 40px #ff0055, 0 12px 0 #7a002a; }
+    .card.f2-selected { border: 4px solid #00ffff; box-shadow: 0 0 40px #00ffff, 0 12px 0 #006b6b; }
+
+    .char-icon {
+      font-size: 4.2rem;
+      line-height: 1.2;
+      filter: drop-shadow(0 0 12px currentColor);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+    .mahoraga-icon {
+      position: relative;
+      display: inline-block;
+    }
+    .mahoraga-icon .wheel {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 2.5rem;
+      filter: drop-shadow(0 0 8px gold);
+      animation: spin 4s linear infinite;
+    }
+    @keyframes spin { 100% { transform: translateX(-50%) rotate(360deg); } }
+    .char-name {
+      font-weight: 800;
+      font-size: 1.3rem;
+      background: linear-gradient(45deg, #ffd966, #ffae42);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 8px 0 5px;
+    }
+    .pick-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .pick-f1, .pick-f2 {
+      border: none;
+      padding: 6px 12px;
+      border-radius: 40px;
+      font-weight: bold;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 4px 0 #0f1a24;
+    }
+    .pick-f1 { background: #ff0055; color: white; }
+    .pick-f2 { background: #00ffff; color: black; }
+    .pick-f1:hover, .pick-f2:hover { transform: translateY(-3px); filter: brightness(1.2); }
+
+    /* ARENA */
+    .arena {
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(12px);
+      border: 3px solid #ff00aa;
+      border-radius: 120px 120px 50px 50px;
+      padding: 30px 15px;
+      margin: 50px 0;
+      box-shadow: 0 0 80px #ff00c8, inset 0 0 30px #ffb3ff;
+      position: relative;
+    }
+    .fighters-panel {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .slot {
+      width: 270px;
+      background: #0f1a28;
+      border-radius: 70px;
+      padding: 25px 10px;
+      text-align: center;
+      border: 3px dashed magenta;
+      box-shadow: 0 0 30px magenta;
+      transition: 0.3s;
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .slot.f1-active { border: 4px solid #ff0055; box-shadow: 0 0 50px #ff0055; }
+    .slot.f2-active { border: 4px solid #00ffff; box-shadow: 0 0 50px #00ffff; }
+    .fighter-icon {
+      font-size: 6rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .fighter-name {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(45deg, white, #ffcc00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .empty-slot {
+      font-size: 1.4rem;
+      color: #aaa;
+      opacity: 0.7;
+    }
+    .vs {
+      font-family: 'Bangers', cursive;
+      font-size: 5.5rem;
+      text-shadow: 0 0 30px white, 0 0 70px cyan, 0 0 120px magenta;
+      animation: pulse 1s infinite alternate;
+    }
+    @keyframes pulse { 0% { transform: scale(1); } 100% { transform: scale(1.15); } }
+    .battle-btn {
+      display: block;
+      width: 280px;
+      margin: 30px auto 15px;
+      padding: 20px 30px;
+      font-family: 'Bangers', cursive;
+      font-size: 2.7rem;
+      background: linear-gradient(45deg, #ff0055, #ffaa00);
+      border: none;
+      border-radius: 70px;
+      color: white;
+      text-shadow: 0 0 15px darkred;
+      cursor: pointer;
+      box-shadow: 0 18px 0 #a00038, 0 0 60px #ff00c8;
+      transition: 0.07s;
+      letter-spacing: 4px;
+    }
+    .battle-btn:active { transform: translateY(12px); box-shadow: 0 6px 0 #a00038, 0 0 90px cyan; }
+    .battle-btn:disabled {
+      opacity: 0.3;
+      transform: translateY(8px);
+      box-shadow: 0 10px 0 #4a001a;
+      pointer-events: none;
+    }
+
+    /* STICKMAN CANVAS + TAG */
+    .battle-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 30px 0;
+    }
+    .stickman-canvas {
+      background: #1a1f30;
+      border-radius: 40px;
+      border: 4px solid gold;
+      box-shadow: 0 0 60px #ffb347;
+      width: 100%;
+      max-width: 900px;
+      height: auto;
+      display: block;
+    }
+    .fighter-tags {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 900px;
+      margin: 10px auto;
+      padding: 0 20px;
+    }
+    .tag {
+      background: #0f1a28;
+      border-radius: 40px;
+      padding: 10px 25px;
+      border: 2px solid cyan;
+      font-size: 1.5rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .tag-left { border-color: #ff0055; }
+    .tag-right { border-color: #00ffff; }
+    .battle-log {
+      background: #0b0f1c;
+      border-radius: 40px;
+      padding: 20px 30px;
+      font-size: 1.6rem;
+      font-weight: 600;
+      text-align: center;
+      border: 3px solid #ff44ee;
+      box-shadow: inset 0 0 30px black, 0 0 40px magenta;
+      max-width: 700px;
+      margin: 20px auto;
+      min-height: 100px;
+    }
+    footer {
+      text-align: center;
+      color: #6c8b9f;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="glitch">STICKMAN BATTLE: EPIC EFFECTS</h1>
+    <div class="sub">✨ efek angin, api, listrik, ledakan — setiap karakter unik ✨</div>
+
+    <!-- GRID KARAKTER -->
+    <div class="char-grid" id="charGrid"></div>
+
+    <!-- ARENA -->
+    <div class="arena">
+      <div class="fighters-panel">
+        <div class="slot f1-active" id="slotF1">
+          <div class="fighter-icon" id="f1BigIcon">❓</div>
+          <div class="fighter-name" id="f1Name">Fighter 1</div>
+          <div class="empty-slot" id="f1Empty">(pilih karakter)</div>
+        </div>
+        <div class="vs">VS</div>
+        <div class="slot f2-active" id="slotF2">
+          <div class="fighter-icon" id="f2BigIcon">❓</div>
+          <div class="fighter-name" id="f2Name">Fighter 2</div>
+          <div class="empty-slot" id="f2Empty">(pilih karakter)</div>
+        </div>
+      </div>
+
+      <button class="battle-btn" id="battleBtn" disabled>FIGHT!</button>
+
+      <!-- BATTLE VISUAL: STICKMAN CANVAS + TAGS -->
+      <div id="battleVisual" class="battle-stage"></div>
+      <div id="battleLog" class="battle-log">⚡ Pilih petarung untuk memulai ⚡</div>
+    </div>
+
+    <footer>🌀 Mahoraga roda berputar | efek spesial tiap karakter</footer>
+  </div>
+
+  <script>
+    (function() {
+      // ========== DATA KARAKTER ==========
+      const characters = [
+        { name: "Mahoraga", icon: "👹", wheel: "🌀", power: 98, special: "Adaptasi & Roda", color: "#b30000", element: 'dark' },
+        { name: "Lorde", icon: "👑", power: 89, special: "Nyanyian Bintang", color: "#FFD700", element: 'light' },
+        { name: "Naruto", icon: "🍥", power: 92, special: "Rasengan Ultra", color: "#FF8C00", element: 'wind' },
+        { name: "Doraemon", icon: "🐱", power: 72, special: "Kantong Ajaib", color: "#1E90FF", element: 'gadget' },
+        { name: "Aizen", icon: "👓", power: 97, special: "Kyoka Suigetsu", color: "#4B0082", element: 'illusion' },
+        { name: "Sasuke", icon: "🍅", power: 91, special: "Amaterasu", color: "#2E0854", element: 'fire' },
+        { name: "Goku", icon: "🐉", power: 105, special: "Kamehameha ×10", color: "#FF4500", element: 'ki' },
+        { name: "Luffy", icon: "🍖", power: 93, special: "Gear 5", color: "#DC143C", element: 'gum' },
+        { name: "Ichigo", icon: "⚔️", power: 94, special: "Bankai Tensa Zangetsu", color: "#FFA500", element: 'spirit' },
+        { name: "Pikachu", icon: "⚡", power: 80, special: "1000000 Volt", color: "#FFD700", element: 'lightning' },
+        { name: "Eren", icon: "🪓", power: 87, special: "Attack Titan", color: "#228B22", element: 'titan' },
+        { name: "Gojo", icon: "😎", power: 101, special: "Domain Expansion", color: "#B0E0E6", element: 'cursed' },
+        { name: "Levi", icon: "⚔️", power: 94, special: "Dinding Pemotong", color: "#708090", element: 'slash' },
+        { name: "Zenitsu", icon: "⚡", power: 78, special: "Petir Enam", color: "#FFD700", element: 'thunder' },
+        { name: "Tanjiro", icon: "🌊", power: 87, special: "Hinokami Kagura", color: "#CD5C5C", element: 'water' },
+        { name: "Saitama", icon: "👊", power: 110, special: "Serius Punch", color: "#F0E68C", element: 'wind' }
+      ];
+
+      let fighter1 = null, fighter2 = null;
+      // DOM
+      const grid = document.getElementById('charGrid');
+      const f1BigIcon = document.getElementById('f1BigIcon');
+      const f1Name = document.getElementById('f1Name');
+      const f1Empty = document.getElementById('f1Empty');
+      const f2BigIcon = document.getElementById('f2BigIcon');
+      const f2Name = document.getElementById('f2Name');
+      const f2Empty = document.getElementById('f2Empty');
+      const battleBtn = document.getElementById('battleBtn');
+      const battleVisual = document.getElementById('battleVisual');
+      const battleLog = document.getElementById('battleLog');
+
+      function renderIconHTML(char, large = false) {
+        const sizeClass = large ? 'fighter-icon' : 'char-icon';
+        if (char.name === "Mahoraga") {
+          return `<div class="${sizeClass}" style="color:${char.color};">
+            <span class="mahoraga-icon">
+              ${char.icon}
+              <span class="wheel">${char.wheel}</span>
+            </span>
+          </div>`;
+        } else {
+          return `<div class="${sizeClass}" style="color:${char.color};">${char.icon}</div>`;
+        }
+      }
+
+      function updateSlots() {
+        if (fighter1) {
+          f1BigIcon.innerHTML = renderIconHTML(fighter1, true);
+          f1Name.innerText = fighter1.name;
+          f1Empty.style.display = 'none';
+        } else {
+          f1BigIcon.innerText = '❓';
+          f1Name.innerText = 'Fighter 1';
+          f1Empty.style.display = 'block';
+        }
+        if (fighter2) {
+          f2BigIcon.innerHTML = renderIconHTML(fighter2, true);
+          f2Name.innerText = fighter2.name;
+          f2Empty.style.display = 'none';
+        } else {
+          f2BigIcon.innerText = '❓';
+          f2Name.innerText = 'Fighter 2';
+          f2Empty.style.display = 'block';
+        }
+        battleBtn.disabled = !(fighter1 && fighter2);
+        battleLog.innerText = (fighter1 && fighter2) ? `⚡ ${fighter1.name} vs ${fighter2.name} ⚡` : '⏳ Pilih dua petarung...';
+        // highlight kartu
+        document.querySelectorAll('.card').forEach(card => {
+          card.classList.remove('f1-selected', 'f2-selected');
+          const nm = card.getAttribute('data-name');
+          if (fighter1 && fighter1.name === nm) card.classList.add('f1-selected');
+          if (fighter2 && fighter2.name === nm) card.classList.add('f2-selected');
+        });
+      }
+
+      function renderGrid() {
+        grid.innerHTML = '';
+        characters.forEach(char => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.setAttribute('data-name', char.name);
+          const iconDiv = document.createElement('div');
+          iconDiv.innerHTML = renderIconHTML(char, false);
+          const nameDiv = document.createElement('div');
+          nameDiv.className = 'char-name';
+          nameDiv.innerText = char.name;
+          const btnDiv = document.createElement('div');
+          btnDiv.className = 'pick-buttons';
+          const f1Btn = document.createElement('button');
+          f1Btn.className = 'pick-f1';
+          f1Btn.innerText = 'F1';
+          f1Btn.addEventListener('click', (e) => { e.stopPropagation(); fighter1 = char; updateSlots(); });
+          const f2Btn = document.createElement('button');
+          f2Btn.className = 'pick-f2';
+          f2Btn.innerText = 'F2';
+          f2Btn.addEventListener('click', (e) => { e.stopPropagation(); fighter2 = char; updateSlots(); });
+          btnDiv.appendChild(f1Btn);
+          btnDiv.appendChild(f2Btn);
+          card.appendChild(iconDiv);
+          card.appendChild(nameDiv);
+          card.appendChild(btnDiv);
+          card.addEventListener('click', () => {
+            if (!fighter1) fighter1 = char;
+            else if (!fighter2) fighter2 = char;
+            else fighter1 = char;
+            updateSlots();
+          });
+          grid.appendChild(card);
+        });
+        updateSlots();
+      }
+
+      // ========== SISTEM ANIMASI REALISTIS DENGAN EFEK ==========
+      class StickmanPose {
+        constructor() {
+          this.headY = -35;
+          this.bodyX = 0;
+          this.bodyY = 0;
+          this.leftArm = { x: -20, y: 20 };
+          this.rightArm = { x: 20, y: 20 };
+          this.leftLeg = { x: -15, y: 55 };
+          this.rightLeg = { x: 15, y: 55 };
+          this.xOffset = 0;
+          this.yOffset = 0;
+          this.shake = 0;
+          this.wheelAngle = 0;
+        }
+
+        lerp(target, factor) {
+          this.headY += (target.headY - this.headY) * factor;
+          this.bodyX += (target.bodyX - this.bodyX) * factor;
+          this.bodyY += (target.bodyY - this.bodyY) * factor;
+          this.leftArm.x += (target.leftArm.x - this.leftArm.x) * factor;
+          this.leftArm.y += (target.leftArm.y - this.leftArm.y) * factor;
+          this.rightArm.x += (target.rightArm.x - this.rightArm.x) * factor;
+          this.rightArm.y += (target.rightArm.y - this.rightArm.y) * factor;
+          this.leftLeg.x += (target.leftLeg.x - this.leftLeg.x) * factor;
+          this.leftLeg.y += (target.leftLeg.y - this.leftLeg.y) * factor;
+          this.rightLeg.x += (target.rightLeg.x - this.rightLeg.x) * factor;
+          this.rightLeg.y += (target.rightLeg.y - this.rightLeg.y) * factor;
+          this.xOffset += (target.xOffset - this.xOffset) * factor;
+          this.yOffset += (target.yOffset - this.yOffset) * factor;
+          this.shake = target.shake;
+          this.wheelAngle = target.wheelAngle;
+        }
+
+        clone() {
+          let p = new StickmanPose();
+          p.headY = this.headY;
+          p.bodyX = this.bodyX;
+          p.bodyY = this.bodyY;
+          p.leftArm = { ...this.leftArm };
+          p.rightArm = { ...this.rightArm };
+          p.leftLeg = { ...this.leftLeg };
+          p.rightLeg = { ...this.rightLeg };
+          p.xOffset = this.xOffset;
+          p.yOffset = this.yOffset;
+          p.shake = this.shake;
+          p.wheelAngle = this.wheelAngle;
+          return p;
+        }
+      }
+
+      // ========== FUNGSI PEMBANGKIT POSE ==========
+      function getIdlePose() {
+        let p = new StickmanPose();
+        p.headY = -35;
+        p.bodyX = 0; p.bodyY = 0;
+        p.leftArm = { x: -20, y: 20 };
+        p.rightArm = { x: 20, y: 20 };
+        p.leftLeg = { x: -15, y: 55 };
+        p.rightLeg = { x: 15, y: 55 };
+        p.xOffset = 0; p.yOffset = 0;
+        return p;
+      }
+
+      function getLungePunchPose(progress) {
+        let p = new StickmanPose();
+        if (progress < 0.3) {
+          let t = progress / 0.3;
+          p.rightArm = { x: 20 + 15 * t, y: 20 - 10 * t };
+          p.leftArm = { x: -20 - 5 * t, y: 20 + 5 * t };
+          p.xOffset = -10 * t;
+        } else if (progress < 0.7) {
+          let t = (progress - 0.3) / 0.4;
+          p.rightArm = { x: 35 + 30 * t, y: 10 - 15 * t };
+          p.leftArm = { x: -25 - 5 * t, y: 25 - 5 * t };
+          p.xOffset = -10 + 50 * t;
+        } else {
+          let t = (progress - 0.7) / 0.3;
+          p.rightArm = { x: 65 - 40 * t, y: -5 + 20 * t };
+          p.leftArm = { x: -30 + 10 * t, y: 20 + 0 * t };
+          p.xOffset = 40 - 40 * t;
+        }
+        return p;
+      }
+
+      function getJumpKickPose(progress) {
+        let p = new StickmanPose();
+        if (progress < 0.2) {
+          let t = progress / 0.2;
+          p.bodyY = 10 * t;
+          p.leftLeg = { x: -15 - 10 * t, y: 55 - 5 * t };
+          p.rightLeg = { x: 15 + 20 * t, y: 55 - 20 * t };
+        } else if (progress < 0.6) {
+          let t = (progress - 0.2) / 0.4;
+          p.bodyY = 10 + 30 * t;
+          p.xOffset = 20 + 50 * t;
+          p.rightLeg = { x: 35 + 30 * t, y: 35 - 25 * t };
+          p.leftLeg = { x: -25 - 5 * t, y: 50 - 5 * t };
+          p.rightArm = { x: 30, y: 0 };
+          p.leftArm = { x: -30, y: 0 };
+        } else {
+          let t = (progress - 0.6) / 0.4;
+          p.bodyY = 40 - 40 * t;
+          p.xOffset = 70 - 70 * t;
+          p.rightLeg =
